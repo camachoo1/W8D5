@@ -102,10 +102,10 @@ Board.prototype._positionsToFlip = function (
   dir,
   piecesToFlip = []
 ) {
-  const newPos = pos.map((num, idx) => num + dir[idx]);
   // const [startRow, startCol] = pos;
   // const [endRow, endCol] = dir;
   // let newPos = [startRow + endRow, startCol + endCol];
+  const newPos = pos.map((num, idx) => num + dir[idx]);
 
   if (!this.isValidPos(newPos)) return [];
   if (!piecesToFlip.length && this.isMine(newPos, color)) return [];
@@ -118,15 +118,19 @@ Board.prototype._positionsToFlip = function (
   }
 
   return piecesToFlip;
+
   // if (!this.isValidPos(newPos)) {
-  //   return piecesToFlip;
+  //   return [];
   // } else if (!this.isOccupied(newPos)) {
-  //   return piecesToFlip;
-  // } else if (this.isMine(newPos, color)) {
-  //   return !piecesToFlip.length ? [] : piecesToFlip;
-  // } else {
-  //   this._positionsToFlip(newPos, color, dir, piecesToFlip);
+  //   return [];
+  // } else if (!piecesToFlip.length && this.isMine(newPos, color)) {
+  //   return [];
+  // } else if (!this.isMine(newPos, color)) {
+  //   piecesToFlip.push(newPos);
+  //   let newPiecesToFlip = piecesToFlip;
+  //   return this._positionsToFlip(newPos, color, dir, newPiecesToFlip);
   // }
+  // return piecesToFlip;
 };
 
 /**
