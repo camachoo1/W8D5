@@ -138,7 +138,15 @@ Board.prototype._positionsToFlip = function (
  * taking the position will result in some pieces of the opposite
  * color being flipped.
  */
-Board.prototype.validMove = function (pos, color) {};
+Board.prototype.validMove = function (pos, color) {
+  if (this.isOccupied(pos)) return false;
+
+  for (let i = 0; i < Board.DIRS.length; i++) {
+    if (this._positionsToFlip(pos, color, Board.DIRS[i]).length > 0)
+      return true;
+  }
+  return false;
+};
 
 /**
  * Adds a new piece of the given color to the given position, flipping the
@@ -146,29 +154,79 @@ Board.prototype.validMove = function (pos, color) {};
  *
  * Throws an error if the position represents an invalid move.
  */
-Board.prototype.placePiece = function (pos, color) {};
+Board.prototype.placePiece = function (pos, color) {
+  const [row, col] = pos;
+
+  if (!this.validMove(pos, color)) {
+    throw Error('Invalid move!');
+  } else {
+    this.grid[row][col] = new Piece(color);
+  }
+
+  for (let i = 0; i < Board.DIRS.length; i++) {
+    posToFlip = this._positionsToFlip(pos, color, Board.DIRS[i]);
+  }
+
+  for (let i = 0; i < posToFlip.length; i++) {
+    this.getPiece(posToFlip[i]).flip();
+  }
+};
 
 /**
  * Produces an array of all valid positions on
  * the Board for a given color.
  */
-Board.prototype.validMoves = function (color) {};
+Board.prototype.validMoves = function (color) {
+  let validPos = [];
+
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      let potentialPos = [i, j];
+      if (this.validMove(potentialPos, color))
+        validPos.push(potentialPos);
+    }
+  }
+
+  return validPos;
+};
 
 /**
  * Checks if there are any valid moves for the given color.
  */
-Board.prototype.hasMove = function (color) {};
+Board.prototype.hasMove = function (color) {
+  const validPos = this.validMoves(color);
+  return validPos.length === 0 ? false : true;
+};
 
 /**
  * Checks if both the white player and
  * the black player are out of moves.
  */
-Board.prototype.isOver = function () {};
+Board.prototype.isOver = function () {
+  const blackMovs = this.hasMove('black');
+  const whiteMovs = this.hasMove('white');
+
+  return blackMovs && whiteMovs ? false : true;
+};
 
 /**
  * Prints a string representation of the Board to the console.
  */
-Board.prototype.print = function () {};
+Board.prototype.print = function () {
+  console.log(`  01234567`);
+
+  for (let i = 0; i < 8; i++) {
+    let row = i + ' ';
+
+    for (let j = 0; j < 8; j++) {
+      let pos = [i, j];
+      row += this.isOccupied(pos)
+        ? this.getPiece(pos).toString()
+        : '.';
+    }
+    console.log(row);
+  }
+};
 
 // DON'T TOUCH THIS CODE
 if (typeof window === 'undefined') {
