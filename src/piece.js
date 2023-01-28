@@ -16,9 +16,14 @@ Piece.prototype.oppColor = function () {
  * Changes the piece's color to the opposite color.
  */
 Piece.prototype.flip = function () {
-  return this.color === 'black'
-    ? (this.color = 'white')
-    : (this.color = 'black');
+  //   return this.color === 'black'
+  //     ? (this.color = 'white')
+  //     : (this.color = 'black');
+  if (this.color === 'black') {
+    return (this.color = 'white');
+  } else {
+    return (this.color = 'black');
+  }
 };
 
 /**

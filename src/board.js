@@ -162,13 +162,16 @@ Board.prototype.placePiece = function (pos, color) {
   } else {
     this.grid[row][col] = new Piece(color);
   }
-
+  let posToFlip = [];
   for (let i = 0; i < Board.DIRS.length; i++) {
-    posToFlip = this._positionsToFlip(pos, color, Board.DIRS[i]);
+    posToFlip.push(this._positionsToFlip(pos, color, Board.DIRS[i]));
   }
 
   for (let i = 0; i < posToFlip.length; i++) {
-    this.getPiece(posToFlip[i]).flip();
+    let subArr = posToFlip[i];
+    for (let j = 0; j < subArr.length; j++) {
+      this.getPiece(posToFlip[i][j]).flip();
+    }
   }
 };
 
@@ -203,10 +206,10 @@ Board.prototype.hasMove = function (color) {
  * the black player are out of moves.
  */
 Board.prototype.isOver = function () {
-  const blackMovs = this.hasMove('black');
+  const blkMovs = this.hasMove('black');
   const whiteMovs = this.hasMove('white');
 
-  return blackMovs && whiteMovs ? false : true;
+  return blkMovs && whiteMovs ? false : true;
 };
 
 /**
